@@ -5,6 +5,8 @@ var size = 20;
 var ejes = { x:0,y:0 };
 //comida
 var ejes1 = null;
+//Cuerpo
+var cuerpo = [];
 
 //Contadores
 dx = 0;
@@ -17,10 +19,18 @@ function main(){
     dibujar();
 }
 function cambiar(){
+    var prevX, prevY;
+    prevX = ejes.x;
+    prevY = ejes.y;
     //actualizar ejes de la cabeza
     ejes.x += dx;
     ejes.y += dy;
+
     //actualizar ejes de la comida
+    if(ejes1 && ejes.x === ejes1.x && ejes.y === ejes1.y ){
+        ejes1 = null;
+        crecerCuerpo(prevX,prevY);
+    }
     if(!ejes1){
         ejes1 = {x:valorX(),y:valorY()};
     }
@@ -32,6 +42,9 @@ function dibujar(){
     
     //Dibujando la cabeza
     dibujarObj(ejes,size,'red');
+    cuerpo.forEach(element =>
+            dibujarObj(element,size,'red')
+        );
     //Dibujando la comida
     dibujarObj(ejes1,size, 'blue');
 }
@@ -46,6 +59,11 @@ function valorX(){
 function valorY(){
     vy = (Math.floor(Math.random()*30))*20;
     return vy;
+}
+function crecerCuerpo(prevX,prevY){
+    cuerpo.push(
+        {x:prevX,y:prevY}
+    );
 }
 
 document.addEventListener('keydown',function(e){
